@@ -14,6 +14,7 @@ class OneCycle(keras.callbacks.Callback):
             self,
             lr_range,
             momentum_range=None,
+            phase_one_fraction=0.3,
             reset_on_train_begin=True,
             record_frq=10,
             verbose=False):
@@ -28,6 +29,7 @@ class OneCycle(keras.callbacks.Callback):
             if not isinstance(momentum_range, (tuple,)) or len(momentum_range) != 2:
                 raise ValueError(err_msg)
 
+        self.phase_one_fraction = phase_one_fraction
         self.reset_on_train_begin = reset_on_train_begin
         self.record_frq = record_frq
         self.verbose = verbose
@@ -51,13 +53,12 @@ class OneCycle(keras.callbacks.Callback):
             n_iter = self.n_iter
 
         x = float(self.current_iter) / n_iter
-        # first half
-        if x < 0.5:
+        if x < self.phase_one_fraction:
             amp = self.lr_range[1] - self.lr_range[0]
-            lr = (np.cos(x * np.pi * 2 - np.pi) + 1) * amp / 2.0 + self.lr_range[0]
-        if x >= 0.5:
+            lr = (np.cos(x * np.pi/self.phase_one_fraction - np.pi) + 1) * amp / 2.0 + self.lr_range[0]
+        if x >= self.phase_one_fraction:
             amp = self.lr_range[1]
-            lr = (np.cos((x - 0.5) * np.pi * 2) + 1) / 2.0 * amp
+            lr = (np.cos((x - self.phase_one_fraction) * np.pi/ (1-self.phase_one_fraction)) + 1) / 2.0 * amp
         return lr
 
     def get_current_momentum(self, n_iter=None):
@@ -68,8 +69,13 @@ class OneCycle(keras.callbacks.Callback):
         """
         if n_iter is None:
             n_iter = self.n_iter
-        amplitude = self.momentum_range[1] - self.momentum_range[0]
-        delta = (1 - np.abs(np.mod(self.current_iter, n_iter) * 2.0 / n_iter - 1)) * amplitude
+        amp = self.momentum_range[1] - self.momentum_range[0]
+        # delta = (1 - np.abs(np.mod(self.current_iter, n_iter) * 2.0 / n_iter - 1)) * amplitude
+        x = float(self.current_iter) / n_iter
+        if x < self.phase_one_fraction:
+            delta = (np.cos(x * np.pi / self.phase_one_fraction - np.pi) + 1) * amp / 2.0
+        if x >= self.phase_one_fraction:
+            delta = (np.cos((x - self.phase_one_fraction) * np.pi / (1 - self.phase_one_fraction)) + 1) / 2.0 * amp
         return delta + self.momentum_range[0]
 
     def set_momentum(self):
