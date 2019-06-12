@@ -6,6 +6,7 @@ except:
     import keras.backend as K
 import numpy as np
 import matplotlib.pyplot as plt
+from .utils import set_lr, set_momentum
 
 
 class CLR(keras.callbacks.Callback):
@@ -28,8 +29,8 @@ class CLR(keras.callbacks.Callback):
             self,
             cyc,
             lr_range,
-            mom_range,
-            scale="log",
+            momentum_range,
+            phase_one_fraction=0.3,
             amplitude_fn=None,
             amplitude_fn_mode='cycle',
             reset_on_train_begin=True,
@@ -38,13 +39,10 @@ class CLR(keras.callbacks.Callback):
 
         super(CLR, self).__init__()
 
-        self.base_lr = base_lr
-        self.max_lr = max_lr
-        self.step_size = step_size
-
-        if scale not in ["log", "linear"]:
-            raise KeyError("``scale`` must be either ""log"" or ""linear"".")
-        self.scale = scale
+        self.cyc = cyc
+        self.lr_range = lr_range
+        self.momentum_range = momentum_range
+        self.phase_one_fraction = phase_one_fraction
 
         if amplitude_fn is None:
             amplitude_fn = lambda x: 1.0
@@ -56,104 +54,123 @@ class CLR(keras.callbacks.Callback):
             raise KeyError("``amplitude_fn_mode`` must be either ""cycle"" or ""iteration"".")
         self.amplitude_fn_mode = amplitude_fn_mode
 
-        self.terminate_on_cycle = terminate_on_cycle
         self.reset_on_train_begin = reset_on_train_begin
         self.record_frq = record_frq
         self.verbose = verbose
 
         # helper tracker
-        self.clr_iterations = 0.
-        self.history = {}  # history in iterations
-        self.history_epoch = {}  # history in epochs
+        self.current_iter = 0
+        self.log = {}  # history in iterations
+        self.log_ep = {}  # history in epochs
+        self.stop_training = False
 
         self.reset()
 
-    def reset(self, new_base_lr=None, new_max_lr=None, new_step_size=None):
-        """
-        Resets cycle iterations. Optional boundary/step size adjustment.
-        :param new_base_lr: a new base_lr
-        :param new_max_lr: a new max_lr
-        :param new_step_size: a new step_sze
-        """
-        if new_base_lr is not None:
-            self.base_lr = new_base_lr
-        if new_max_lr is not None:
-            self.max_lr = new_max_lr
-        if new_step_size is not None:
-            self.step_size = new_step_size
+    def reset(self):
+        self.current_iter = 0
 
-        self.clr_iterations = 0.
-        self.history = {}
-
-    def clr(self):
+    def get_current_lr(self, n_iter=None):
         """
         A helper function to calculate a current learning rate based on current iteration number.
 
         :return lr: a current learning rate.
         """
-        if self.scale == "log":
-            amplitude = np.log10(self.max_lr) - np.log10(self.base_lr)
-        if self.scale == "linear":
-            amplitude = self.max_lr - self.base_lr
+        if n_iter is None:
+            n_iter = self.n_iter
 
-        period = 2 * self.step_size
+        x = float(self.current_iter) / n_iter
+        # current cycle
+        c = np.floor(x * self.cyc)
+        # current cycle phase
+        x = (x - c / self.cyc) * self.cyc
 
-        cycle = np.floor(self.clr_iterations / period)
+        amp_0 = self.lr_range[1] - self.lr_range[0]
+        amp_mod = self.amplitude_fn(c)
+        if x < self.phase_one_fraction:
+            amp = amp_0 * amp_mod
+            lr = (np.cos(x * np.pi / self.phase_one_fraction - np.pi) + 1) * amp / 2.0 \
+                 + self.lr_range[0]
+        if x >= self.phase_one_fraction:
+            amp = amp_0 * amp_mod + self.lr_range[0]
+            lr = (np.cos((x - self.phase_one_fraction) * np.pi / (1 - self.phase_one_fraction)) + 1) / 2.0 * amp
+        return lr
 
-        if self.amplitude_fn_mode == "cycle":
-            amp_mod = self.amplitude_fn(cycle)
-        if self.amplitude_fn_mode == "iteration":
-            amp_mod = self.amplitude_fn(self.clr_iterations)
+    def get_current_momentum(self, n_iter=None):
+        """
+        A helper function to calculate a current momentum based on current iteration number.
 
-        dlr = (1 - np.abs(np.mod(self.clr_iterations, period) * 2.0 / period - 1)) * amplitude * amp_mod
+        :return momentum: a current momentum.
+        """
+        if n_iter is None:
+            n_iter = self.n_iter
+        amp = self.momentum_range[1] - self.momentum_range[0]
 
-        if self.scale == "log":
-            return np.power(10.0, dlr + np.log10(self.base_lr))
-        if self.scale == "linear":
-            return dlr + self.base_lr
+        x = float(self.current_iter) / n_iter
+        # current cycle
+        c = np.floor(x * self.cyc)
+        # current cycle phase
+        x = (x - c / self.cyc) * self.cyc
+
+        if x < self.phase_one_fraction:
+            delta = (np.cos(x * np.pi / self.phase_one_fraction - np.pi) + 1) * amp / 2.0
+        if x >= self.phase_one_fraction:
+            delta = (np.cos((x - self.phase_one_fraction) * np.pi / (1 - self.phase_one_fraction)) + 1) / 2.0 * amp
+        return delta + self.momentum_range[0]
+
+    @property
+    def cycle_momentum(self):
+        return self.momentum_range is not None
 
     def on_train_begin(self, logs={}):
+        self.n_epoch = self.params['epochs']
+
+        # find number of batches per epoch
+        if self.params['batch_size'] is not None:  # model.fit
+            self.n_bpe = int(np.ceil(self.params['samples'] / self.params['batch_size']))
+        if self.params['batch_size'] is None:  # model.fit_generator
+            self.n_bpe = self.params['samples']
+
+        self.n_iter = self.n_epoch * self.n_bpe
+        # this is a number of iteration in one cycle
 
         if self.reset_on_train_begin:
-            self.reset()
+            self.reset
 
-        if self.clr_iterations == 0:
-            K.set_value(self.model.optimizer.lr, self.base_lr)
-        else:
-            K.set_value(self.model.optimizer.lr, self.clr())
+    def on_train_batch_begin(self, batch, logs={}):
+        set_lr(self.model.optimizer, self.get_current_lr())
+        if self.cycle_momentum:
+            set_momentum(self.model.optimizer, self.get_current_momentum())
 
-    def on_batch_begin(self, batch, logs=None):
-        K.set_value(self.model.optimizer.lr, self.clr())
+    def on_train_batch_end(self, batch, logs={}):
+
         if self.verbose:
-            print("CLR {} iteration: lr = {}".format(int(self.clr_iterations), self.clr()))
+            print("lr={:.2e}".format(self.get_current_lr()), ",", "m={:.2e}".format(self.get_current_momentum()))
 
-    def on_batch_end(self, batch, logs={}):
         # record according to record_frq
-        if np.mod(int(self.clr_iterations), self.record_frq) == 0:
-            self.history.setdefault(
-                'lr', []).append(
-                K.get_value(
-                    self.model.optimizer.lr))
+        if np.mod(int(self.current_iter), self.record_frq) == 0:
+            self.log.setdefault('lr', []).append(self.get_current_lr())
+            if self.cycle_momentum:
+                self.log.setdefault('momentum', []).append(self.get_current_momentum())
 
             for k, v in logs.items():
-                self.history.setdefault(k, []).append(v)
+                self.log.setdefault(k, []).append(v)
 
-            self.history.setdefault('iter', []).append(self.clr_iterations)
-
-        # consider termination
-        if self.clr_iterations == self.terminate_on_cycle * self.step_size * 2:
-            self.model.stop_training = True
+            self.log.setdefault('iter', []).append(self.current_iter)
 
         # update current iteration
-        self.clr_iterations += 1
+        self.current_iter += 1
+
+        # consider termination
+        if self.current_iter == self.n_iter:
+            self.stop_training = True
 
     def on_epoch_end(self, epoch, logs={}):
-        self.history_epoch.setdefault('epoch', []).append(epoch)
-        self.history_epoch.setdefault('lr', []).append(
+        self.log_ep.setdefault('epoch', []).append(epoch)
+        self.log_ep.setdefault('lr', []).append(
             K.get_value(self.model.optimizer.lr))
 
         for k, v in logs.items():
-            self.history_epoch.setdefault(k, []).append(v)
+            self.log_ep.setdefault(k, []).append(v)
 
     def find_n_epoch(self, dataset, batch_size=None):
         """
@@ -171,17 +188,47 @@ class CLR(keras.callbacks.Callback):
             else:
                 return int(np.ceil(dataset.shape[0] / batch_size))
 
-    def test_run(self, cyc=1):
+    def test_run(self, n_iter=None):
         """
-        :param cyc: a number of cycles
-        :return lrs: learning rates
+        Visualize values of learning rate (and momentum) as a function of iteration (batch).
+
+        :param n_iter: a number of cycles. If None, 1000 is used.
         """
-        lrs = np.zeros(shape=(self.step_size*2*cyc,))
-        for i in range(int(self.step_size*2*cyc)):
-            self.clr_iterations = i
-            lrs[i] = self.clr()
-        plt.plot(lrs)
-        plt.xlabel('iterations')
-        plt.ylabel('lr')
-        return lrs
+
+        if hasattr(self, 'current_iter'):
+            original_it = self.current_iter
+
+        if n_iter is None:
+            if hasattr(self, 'n_iter'):
+                n_iter = self.n_iter
+            else:
+                n_iter = 1000
+        n_iter = int(n_iter)
+
+        lrs = np.zeros(shape=(n_iter,))
+        if self.momentum_range is not None:
+            moms = np.zeros_like(lrs)
+
+        for i in range(int(n_iter)):
+            self.current_iter = i
+            lrs[i] = self.get_current_lr(n_iter)
+            if self.cycle_momentum:
+                moms[i] = self.get_current_momentum(n_iter)
+        if not self.cycle_momentum:
+            plt.plot(lrs)
+            plt.xlabel('iterations')
+            plt.ylabel('lr')
+        else:
+            plt.figure(figsize=(10, 4))
+            plt.subplot(1, 2, 1)
+            plt.plot(lrs)
+            plt.xlabel('iterations')
+            plt.ylabel('lr')
+            plt.subplot(1, 2, 2)
+            plt.plot(moms)
+            plt.xlabel('iterations')
+            plt.ylabel('momentum')
+
+        if hasattr(self, 'current_iter'):
+            self.current_iter = original_it
 

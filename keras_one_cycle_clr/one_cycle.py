@@ -6,6 +6,7 @@ except:
     import keras.backend as K
 import numpy as np
 import matplotlib.pyplot as plt
+from .utils import set_momentum, set_lr
 
 
 class OneCycle(keras.callbacks.Callback):
@@ -35,7 +36,6 @@ class OneCycle(keras.callbacks.Callback):
         self.verbose = verbose
 
         # helper tracker
-        self.at_iteration = 0
         self.log = {}  # history in iterations
         self.log_ep = {}  # history in epochs
         self.stop_training = False
@@ -78,15 +78,16 @@ class OneCycle(keras.callbacks.Callback):
             delta = (np.cos((x - self.phase_one_fraction) * np.pi / (1 - self.phase_one_fraction)) + 1) / 2.0 * amp
         return delta + self.momentum_range[0]
 
-    def set_momentum(self):
-        keys = dir(self.model.optimizer)
-        mom = self.get_current_momentum()
-        if "momentum" in keys:
-            K.set_value(self.model.optimizer.momentum, mom)
-        if "rho" in keys:
-            K.set_value(self.model.optimizer.rho, mom)
-        if "beta_1" in keys:
-            K.set_value(self.model.optimizer.beta_1, mom)
+    # def set_momentum(self):
+        # keys = dir(self.model.optimizer)
+        # mom = self.get_current_momentum()
+        # if "momentum" in keys:
+        #     K.set_value(self.model.optimizer.momentum, mom)
+        # if "rho" in keys:
+        #     K.set_value(self.model.optimizer.rho, mom)
+        # if "beta_1" in keys:
+        #     K.set_value(self.model.optimizer.beta_1, mom)
+
 
     @property
     def cycle_momentum(self):
@@ -107,9 +108,9 @@ class OneCycle(keras.callbacks.Callback):
         self.current_iter = 0
 
     def on_train_batch_begin(self, batch, logs={}):
-        K.set_value(self.model.optimizer.lr, self.get_current_lr())
+        set_lr(self.model.optimizer, self.get_current_lr())
         if self.cycle_momentum:
-            self.set_momentum()
+            set_momentum(self.model.optimizer, self.get_current_momentum())
 
     def on_train_batch_end(self, batch, logs={}):
 
@@ -125,7 +126,7 @@ class OneCycle(keras.callbacks.Callback):
             for k, v in logs.items():
                 self.log.setdefault(k, []).append(v)
 
-            self.log.setdefault('iter', []).append(self.at_iteration)
+            self.log.setdefault('iter', []).append(self.current_iter)
 
         # update current iteration
         self.current_iter += 1
