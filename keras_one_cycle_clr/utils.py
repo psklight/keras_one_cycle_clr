@@ -30,6 +30,7 @@ class History(object):
 def concatenate_history(hlist, reindex_epoch=False):
     """
     A helper function to concatenate training history object (``keras.callbacks.History``) into a single one, with a help ``History`` class.
+
     :param hlist: a list of ``keras.callbacks.History`` objects to concatenate.
     :param reindex_epoch: True or False whether to reindex epoch counters to an increasing order.
     :return his: an instance of ``History`` class that contain concatenated information of epoch and training history.

@@ -13,6 +13,16 @@ from .utils import moving_window_avg
 class LrRangeTest(keras.callbacks.Callback):
     """
     A callback class for finding a learning rate.
+
+    :param lr_range: a tuple of lower and upper bounds of learning rate.
+    :param wd_list: a list of weight decay to perform grid search.
+    :param steps: a number of steps for learning rates in a range test.
+    :param batches_per_step: a number of batches to average loss for each learning rate step.
+    :param threshold_multiplier: a multiplier to lowest encountered training loss to determine early termination of range test.
+    :param validation_data: either (x_test, y_test) or a generator. Useful for wd grid search.
+    :param validation_batch_size: a batch size when evaluating validation loss.
+    :param batches_per_val: a number of batches to use in averaging validation loss.
+    :param verbose: True or False whether to print out progress detail.
     """
 
     def __init__(self,

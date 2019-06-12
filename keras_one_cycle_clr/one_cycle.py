@@ -10,6 +10,16 @@ from .utils import set_momentum, set_lr
 
 
 class OneCycle(keras.callbacks.Callback):
+    """
+    A callback class for one-cycle policy training.
+
+    :param lr_range: a tuple of starting (usually minimum) lr value and maximum (peak) lr value.
+    :param momentum_range: a tuple of momentum values.
+    :param phase_one_fraction: a fraction for phase I (increasing lr) in one cycle. Must between 0 to 1.
+    :param reset_on_train_begin: True or False to reset counters when training begins.
+    :param record_frq: integer > 0, a frequency in batches to record training loss.
+    :param verbose: True or False to print progress.
+    """
 
     def __init__(
             self,
@@ -77,16 +87,6 @@ class OneCycle(keras.callbacks.Callback):
         if x >= self.phase_one_fraction:
             delta = (np.cos((x - self.phase_one_fraction) * np.pi / (1 - self.phase_one_fraction)) + 1) / 2.0 * amp
         return delta + self.momentum_range[0]
-
-    # def set_momentum(self):
-        # keys = dir(self.model.optimizer)
-        # mom = self.get_current_momentum()
-        # if "momentum" in keys:
-        #     K.set_value(self.model.optimizer.momentum, mom)
-        # if "rho" in keys:
-        #     K.set_value(self.model.optimizer.rho, mom)
-        # if "beta_1" in keys:
-        #     K.set_value(self.model.optimizer.beta_1, mom)
 
 
     @property

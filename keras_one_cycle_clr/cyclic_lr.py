@@ -13,16 +13,14 @@ class CLR(keras.callbacks.Callback):
     """
     Based off https://github.com/keras-team/keras-contrib/blob/master/keras_contrib/callbacks/cyclical_learning_rate.py.
 
-    :param base_lr: initial learning rate which is the lower boundary in the cycle.
-    :param max_lr: upper boundary in the cycle. Together with ``base_lr`` it defines the initial amplitude (``max_lr``-``min_lr``) of a cycle. However, the actual amplitude can be modified using a specific ``amplitude_fn``.
-    :param step_size: the number of batch training step of a half cycle.
-    :param scale: either "log" (default) or "linear", determining whether a step in learning rate is uniform in a linear or a log scale.
-    :param amplitude_fn: a function that can alter local amplitude. It must be in a form of ``f(n)`` and returns a number. For example, a constant amplitude function can be ``lambda x: 1`` (default). An exponential decay can be ``lambda x: 1/2**x``.
-    :param amplitude_fn_mode: can only be 'cycle' or 'iteration'. This provides a meaning of ``n`` in ``amplitude_fn``. ``iteration`` means a batch training.
-    :param terminate_on_cycle: a number of cycles to perform CLR training.
-    :param reset_on_train_begin: True or False whether to reset CLR when training starts.
-    :param record_frq: a number of iterations (batches) for performances/metrics to be recorded in ``history`` attribute.
-    :param verbose: True or False whether a progress is printed.
+    :param cyc: an integer for a number of cycles.
+    :param lr_range: a tuple of starting (usually minimum) lr value and maximum (peak) lr value.
+    :param momentum_range: a tuple of momentum values.
+    :param phase_one_fraction: a fraction for phase I (increasing lr) in one cycle. Must between 0 to 1.
+    :param amplitude_fn: a function to modify a cycle's amplitude (lr_max-lr_min). For example, amplitude_fn = lambda x: np.power(0.5, x) will halven the amplitude every cycle.
+    :param reset_on_train_begin: True or False to reset counters when training begins.
+    :param record_frq: integer > 0, a frequency in batches to record training loss.
+    :param verbose: True or False to print progress.
     """
 
     def __init__(
@@ -32,7 +30,6 @@ class CLR(keras.callbacks.Callback):
             momentum_range,
             phase_one_fraction=0.3,
             amplitude_fn=None,
-            amplitude_fn_mode='cycle',
             reset_on_train_begin=True,
             record_frq=10,
             verbose=False):
@@ -49,10 +46,6 @@ class CLR(keras.callbacks.Callback):
         if not callable(amplitude_fn):
             raise TypeError("``amplitude_fn`` must a be a function/callable object returning numeric.")
         self.amplitude_fn = amplitude_fn
-
-        if amplitude_fn_mode not in ["cycle", "iteration"]:
-            raise KeyError("``amplitude_fn_mode`` must be either ""cycle"" or ""iteration"".")
-        self.amplitude_fn_mode = amplitude_fn_mode
 
         self.reset_on_train_begin = reset_on_train_begin
         self.record_frq = record_frq
