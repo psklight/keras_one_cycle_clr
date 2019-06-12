@@ -11,18 +11,18 @@ This module provides Keras callbacks to implement in training the following:
 - Using callbacks, the module works for datasets of numpy arrays or data generator.
 - Common usage as callbacks for both `model.fit` and `model.fit_generator` where `epochs` is intuitively interpreted as cycle lengths.
 
-## Dependencies:
-- `tensorflow`
-- (optional) `keras`
-- `matplotlib`, `numpy`, `pandas`, `tqdm`
-- (optional) `numba`
-
 ### In detail:
 This is inspired by how well fastai library implements this for PyTorch. By the time this module was made, a few options to implement these learning policies in Keras have two limitations: (1) They might not work with data generator; (2) They might need a different way to train (rather than passing a policy as a callback). This module addresses both limitation by defining these training policies as Keras callbacks in such a way that both `model.fit` and `model.fit_generator` can be called. For OPC, the number of `epochs` (argument for fitting) directly represents a cycle length. For LrRT and CLR, `epochs` necessary to complete a training with a particular policy can be calculated from the policy callback's `.find_n_epoch`.
 
 Additionally, the `utils` submodule defines some useful functions such as:
 - `plot_from_history` plots train and validation loss (if any) as a function of epochs.
 - `concatenate_history` concatenates training and validation losses and metrics from a list of `keras.callbacks.History` which can be obtained from `model.history` after training. This is helpful in connecting histories from multiple one-cycle policy trainings.
+
+## Dependencies:
+- `tensorflow`
+- (optional) `keras`
+- `matplotlib`, `numpy`, `pandas`, `tqdm`
+- (optional) `numba`
 
 ## Example of LrRT
 
