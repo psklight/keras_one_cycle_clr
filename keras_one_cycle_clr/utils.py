@@ -30,6 +30,7 @@ class History(object):
 def concatenate_history(hlist, reindex_epoch=False):
     """
     A helper function to concatenate training history object (``keras.callbacks.History``) into a single one, with a help ``History`` class.
+
     :param hlist: a list of ``keras.callbacks.History`` objects to concatenate.
     :param reindex_epoch: True or False whether to reindex epoch counters to an increasing order.
     :return his: an instance of ``History`` class that contain concatenated information of epoch and training history.
@@ -124,4 +125,35 @@ def cuda_release_memory():
 
 
 def moving_window_avg(x, window=5):
+    """
+    Return a moving-window average.
+    :param x: a numpy array
+    :param window: an integer, number of data points for window size.
+    """
     return pd.DataFrame(x).rolling(window=window, min_periods=1).mean().values.squeeze()
+
+
+def set_momentum(optimizer, mom_val):
+    """
+    Helper to set momentum of Keras optimizers.
+
+    :param optimizer: Keras optimizer
+    :param mom_val: value of momentum.
+    """
+    keys = dir(optimizer)
+    if "momentum" in keys:
+        K.set_value(optimizer.momentum, mom_val)
+    if "rho" in keys:
+        K.set_value(optimizer.rho, mom_val)
+    if "beta_1" in keys:
+        K.set_value(optimizer.beta_1, mom_val)
+
+
+def set_lr(optimizer, lr):
+    """
+    Helper to set learning rate of Keras optimizers.
+
+    :param optimizer: Keras optimizer
+    :param lr: value of learning rate.
+    """
+    K.set_value(optimizer.lr, lr)
