@@ -1,0 +1,603 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API &mdash; keras_one_cycle_clr 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Usage Examples" href="../usage_example/usage_example.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> keras_one_cycle_clr
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">One Cycle &amp; Cyclic Learning Rate for Keras</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage_example/usage_example.html">Usage Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-keras_one_cycle_clr.cyclic_lr">cyclic_lr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-keras_one_cycle_clr.lr_range_test">lr_range_test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-keras_one_cycle_clr.one_cycle">one_cycle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-keras_one_cycle_clr.utils">utils</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">keras_one_cycle_clr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/keras_one_cycle_clr.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="api">
+<h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-keras_one_cycle_clr.cyclic_lr">
+<span id="cyclic-lr"></span><h2>cyclic_lr<a class="headerlink" href="#module-keras_one_cycle_clr.cyclic_lr" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR">
+<em class="property">class </em><code class="sig-prename descclassname">keras_one_cycle_clr.cyclic_lr.</code><code class="sig-name descname">CLR</code><span class="sig-paren">(</span><em class="sig-param">cyc</em>, <em class="sig-param">lr_range</em>, <em class="sig-param">momentum_range</em>, <em class="sig-param">phase_one_fraction=0.3</em>, <em class="sig-param">amplitude_fn=None</em>, <em class="sig-param">reset_on_train_begin=True</em>, <em class="sig-param">record_frq=10</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.callbacks.Callback</span></code></p>
+<p>Based off <a class="reference external" href="https://github.com/keras-team/keras-contrib/blob/master/keras_contrib/callbacks/cyclical_learning_rate.py">https://github.com/keras-team/keras-contrib/blob/master/keras_contrib/callbacks/cyclical_learning_rate.py</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cyc</strong> – an integer for a number of cycles.</p></li>
+<li><p><strong>lr_range</strong> – a tuple of starting (usually minimum) lr value and maximum (peak) lr value.</p></li>
+<li><p><strong>momentum_range</strong> – a tuple of momentum values.</p></li>
+<li><p><strong>phase_one_fraction</strong> – a fraction for phase I (increasing lr) in one cycle. Must between 0 to 1.</p></li>
+<li><p><strong>amplitude_fn</strong> – a function to modify a cycle’s amplitude (lr_max-lr_min). For example, amplitude_fn = lambda x: np.power(0.5, x) will halven the amplitude every cycle.</p></li>
+<li><p><strong>reset_on_train_begin</strong> – True or False to reset counters when training begins.</p></li>
+<li><p><strong>record_frq</strong> – integer &gt; 0, a frequency in batches to record training loss.</p></li>
+<li><p><strong>verbose</strong> – True or False to print progress.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR.cycle_momentum">
+<em class="property">property </em><code class="sig-name descname">cycle_momentum</code><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR.cycle_momentum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR.find_n_epoch">
+<code class="sig-name descname">find_n_epoch</code><span class="sig-paren">(</span><em class="sig-param">dataset</em>, <em class="sig-param">batch_size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR.find_n_epoch" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to find a number of epochs to train in the sweep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> – If the training data is an ndarray (used with model.fit), <code class="docutils literal notranslate"><span class="pre">dataset</span></code> is the x_train. If the training data is a generator (used with model.fit_generator), <code class="docutils literal notranslate"><span class="pre">dataset</span></code> is the generator instance.</p></li>
+<li><p><strong>batch_size</strong> – Needed only if <code class="docutils literal notranslate"><span class="pre">dataset</span></code> is x_train.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return epochs</dt>
+<dd class="field-even"><p>a number of epochs needed to do a learning rate sweep.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR.get_current_lr">
+<code class="sig-name descname">get_current_lr</code><span class="sig-paren">(</span><em class="sig-param">n_iter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR.get_current_lr" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function to calculate a current learning rate based on current iteration number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return lr</dt>
+<dd class="field-odd"><p>a current learning rate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR.get_current_momentum">
+<code class="sig-name descname">get_current_momentum</code><span class="sig-paren">(</span><em class="sig-param">n_iter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR.get_current_momentum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function to calculate a current momentum based on current iteration number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return momentum</dt>
+<dd class="field-odd"><p>a current momentum.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR.on_epoch_end">
+<code class="sig-name descname">on_epoch_end</code><span class="sig-paren">(</span><em class="sig-param">epoch</em>, <em class="sig-param">logs={}</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR.on_epoch_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR.on_train_batch_begin">
+<code class="sig-name descname">on_train_batch_begin</code><span class="sig-paren">(</span><em class="sig-param">batch</em>, <em class="sig-param">logs={}</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR.on_train_batch_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR.on_train_batch_end">
+<code class="sig-name descname">on_train_batch_end</code><span class="sig-paren">(</span><em class="sig-param">batch</em>, <em class="sig-param">logs={}</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR.on_train_batch_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR.on_train_begin">
+<code class="sig-name descname">on_train_begin</code><span class="sig-paren">(</span><em class="sig-param">logs={}</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR.on_train_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.cyclic_lr.CLR.test_run">
+<code class="sig-name descname">test_run</code><span class="sig-paren">(</span><em class="sig-param">n_iter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.cyclic_lr.CLR.test_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualize values of learning rate (and momentum) as a function of iteration (batch).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_iter</strong> – a number of cycles. If None, 1000 is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-keras_one_cycle_clr.lr_range_test">
+<span id="lr-range-test"></span><h2>lr_range_test<a class="headerlink" href="#module-keras_one_cycle_clr.lr_range_test" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="keras_one_cycle_clr.lr_range_test.LrRangeTest">
+<em class="property">class </em><code class="sig-prename descclassname">keras_one_cycle_clr.lr_range_test.</code><code class="sig-name descname">LrRangeTest</code><span class="sig-paren">(</span><em class="sig-param">lr_range=(1e-05</em>, <em class="sig-param">10)</em>, <em class="sig-param">wd_list=[]</em>, <em class="sig-param">steps=100</em>, <em class="sig-param">batches_per_step=5</em>, <em class="sig-param">threshold_multiplier=5</em>, <em class="sig-param">validation_data=None</em>, <em class="sig-param">validation_batch_size=16</em>, <em class="sig-param">batches_per_val=10</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.lr_range_test.LrRangeTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.callbacks.Callback</span></code></p>
+<p>A callback class for finding a learning rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lr_range</strong> – a tuple of lower and upper bounds of learning rate.</p></li>
+<li><p><strong>wd_list</strong> – a list of weight decay to perform grid search.</p></li>
+<li><p><strong>steps</strong> – a number of steps for learning rates in a range test.</p></li>
+<li><p><strong>batches_per_step</strong> – a number of batches to average loss for each learning rate step.</p></li>
+<li><p><strong>threshold_multiplier</strong> – a multiplier to lowest encountered training loss to determine early termination of range test.</p></li>
+<li><p><strong>validation_data</strong> – either (x_test, y_test) or a generator. Useful for wd grid search.</p></li>
+<li><p><strong>validation_batch_size</strong> – a batch size when evaluating validation loss.</p></li>
+<li><p><strong>batches_per_val</strong> – a number of batches to use in averaging validation loss.</p></li>
+<li><p><strong>verbose</strong> – True or False whether to print out progress detail.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="keras_one_cycle_clr.lr_range_test.LrRangeTest.find_n_epoch">
+<code class="sig-name descname">find_n_epoch</code><span class="sig-paren">(</span><em class="sig-param">dataset</em>, <em class="sig-param">batch_size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.lr_range_test.LrRangeTest.find_n_epoch" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method to find a number of epochs to train in the sweep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> – If the training data is an ndarray (used with model.fit), <code class="docutils literal notranslate"><span class="pre">dataset</span></code> is the x_train. If the training data is a generator (used with model.fit_generator), <code class="docutils literal notranslate"><span class="pre">dataset</span></code> is the generator instance.</p></li>
+<li><p><strong>batch_size</strong> – Needed only if <code class="docutils literal notranslate"><span class="pre">dataset</span></code> is x_train.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return epochs</dt>
+<dd class="field-even"><p>a number of epochs needed to do a learning rate sweep.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.lr_range_test.LrRangeTest.on_train_batch_begin">
+<code class="sig-name descname">on_train_batch_begin</code><span class="sig-paren">(</span><em class="sig-param">batch</em>, <em class="sig-param">logs</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.lr_range_test.LrRangeTest.on_train_batch_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.lr_range_test.LrRangeTest.on_train_batch_end">
+<code class="sig-name descname">on_train_batch_end</code><span class="sig-paren">(</span><em class="sig-param">batch</em>, <em class="sig-param">logs</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.lr_range_test.LrRangeTest.on_train_batch_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.lr_range_test.LrRangeTest.on_train_begin">
+<code class="sig-name descname">on_train_begin</code><span class="sig-paren">(</span><em class="sig-param">logs={}</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.lr_range_test.LrRangeTest.on_train_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.lr_range_test.LrRangeTest.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">set='train'</em>, <em class="sig-param">x_scale='log'</em>, <em class="sig-param">y_scale='linear'</em>, <em class="sig-param">ma=True</em>, <em class="sig-param">window=5</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.lr_range_test.LrRangeTest.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the lr range test result.
+:param set: either “train” or “valid”. If ‘valid’, <code class="docutils literal notranslate"><span class="pre">validation_data</span></code> must not be <code class="docutils literal notranslate"><span class="pre">None</span></code>.
+:param x_scale: scale for the x axis, either “log” or “linear”.
+:param y_scale: scale for the y axis, either “log” or “linear”.
+:param ma: True or False to use moving windonw average.
+:param window: an integer for window of averaging.
+:param kwargs: valid <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> to [<code class="docutils literal notranslate"><span class="pre">pyplot.plot</span></code>](<a class="reference external" href="https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.plot.html">https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.plot.html</a>) function.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-keras_one_cycle_clr.one_cycle">
+<span id="one-cycle"></span><h2>one_cycle<a class="headerlink" href="#module-keras_one_cycle_clr.one_cycle" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="keras_one_cycle_clr.one_cycle.OneCycle">
+<em class="property">class </em><code class="sig-prename descclassname">keras_one_cycle_clr.one_cycle.</code><code class="sig-name descname">OneCycle</code><span class="sig-paren">(</span><em class="sig-param">lr_range</em>, <em class="sig-param">momentum_range=None</em>, <em class="sig-param">phase_one_fraction=0.3</em>, <em class="sig-param">reset_on_train_begin=True</em>, <em class="sig-param">record_frq=10</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.one_cycle.OneCycle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.callbacks.Callback</span></code></p>
+<p>A callback class for one-cycle policy training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lr_range</strong> – a tuple of starting (usually minimum) lr value and maximum (peak) lr value.</p></li>
+<li><p><strong>momentum_range</strong> – a tuple of momentum values.</p></li>
+<li><p><strong>phase_one_fraction</strong> – a fraction for phase I (increasing lr) in one cycle. Must between 0 to 1.</p></li>
+<li><p><strong>reset_on_train_begin</strong> – True or False to reset counters when training begins.</p></li>
+<li><p><strong>record_frq</strong> – integer &gt; 0, a frequency in batches to record training loss.</p></li>
+<li><p><strong>verbose</strong> – True or False to print progress.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="keras_one_cycle_clr.one_cycle.OneCycle.cycle_momentum">
+<em class="property">property </em><code class="sig-name descname">cycle_momentum</code><a class="headerlink" href="#keras_one_cycle_clr.one_cycle.OneCycle.cycle_momentum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.one_cycle.OneCycle.get_current_lr">
+<code class="sig-name descname">get_current_lr</code><span class="sig-paren">(</span><em class="sig-param">n_iter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.one_cycle.OneCycle.get_current_lr" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function to calculate a current learning rate based on current iteration number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return lr</dt>
+<dd class="field-odd"><p>a current learning rate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.one_cycle.OneCycle.get_current_momentum">
+<code class="sig-name descname">get_current_momentum</code><span class="sig-paren">(</span><em class="sig-param">n_iter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.one_cycle.OneCycle.get_current_momentum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function to calculate a current momentum based on current iteration number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return momentum</dt>
+<dd class="field-odd"><p>a current momentum.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.one_cycle.OneCycle.on_epoch_end">
+<code class="sig-name descname">on_epoch_end</code><span class="sig-paren">(</span><em class="sig-param">epoch</em>, <em class="sig-param">logs={}</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.one_cycle.OneCycle.on_epoch_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.one_cycle.OneCycle.on_train_batch_begin">
+<code class="sig-name descname">on_train_batch_begin</code><span class="sig-paren">(</span><em class="sig-param">batch</em>, <em class="sig-param">logs={}</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.one_cycle.OneCycle.on_train_batch_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.one_cycle.OneCycle.on_train_batch_end">
+<code class="sig-name descname">on_train_batch_end</code><span class="sig-paren">(</span><em class="sig-param">batch</em>, <em class="sig-param">logs={}</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.one_cycle.OneCycle.on_train_batch_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.one_cycle.OneCycle.on_train_begin">
+<code class="sig-name descname">on_train_begin</code><span class="sig-paren">(</span><em class="sig-param">logs={}</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.one_cycle.OneCycle.on_train_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="keras_one_cycle_clr.one_cycle.OneCycle.test_run">
+<code class="sig-name descname">test_run</code><span class="sig-paren">(</span><em class="sig-param">n_iter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.one_cycle.OneCycle.test_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualize values of learning rate (and momentum) as a function of iteration (batch).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_iter</strong> – a number of cycles. If None, 1000 is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-keras_one_cycle_clr.utils">
+<span id="utils"></span><h2>utils<a class="headerlink" href="#module-keras_one_cycle_clr.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="keras_one_cycle_clr.utils.History">
+<em class="property">class </em><code class="sig-prename descclassname">keras_one_cycle_clr.utils.</code><code class="sig-name descname">History</code><span class="sig-paren">(</span><em class="sig-param">history=None</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.utils.History" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Custom class to help get log data from keras.callbacks.History objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>history</strong> – a <code class="docutils literal notranslate"><span class="pre">keras.callbacks.History</span> <span class="pre">object</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="keras_one_cycle_clr.utils.concatenate_history">
+<code class="sig-prename descclassname">keras_one_cycle_clr.utils.</code><code class="sig-name descname">concatenate_history</code><span class="sig-paren">(</span><em class="sig-param">hlist</em>, <em class="sig-param">reindex_epoch=False</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.utils.concatenate_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function to concatenate training history object (<code class="docutils literal notranslate"><span class="pre">keras.callbacks.History</span></code>) into a single one, with a help <code class="docutils literal notranslate"><span class="pre">History</span></code> class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hlist</strong> – a list of <code class="docutils literal notranslate"><span class="pre">keras.callbacks.History</span></code> objects to concatenate.</p></li>
+<li><p><strong>reindex_epoch</strong> – True or False whether to reindex epoch counters to an increasing order.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return his</dt>
+<dd class="field-even"><p>an instance of <code class="docutils literal notranslate"><span class="pre">History</span></code> class that contain concatenated information of epoch and training history.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="keras_one_cycle_clr.utils.cuda_release_memory">
+<code class="sig-prename descclassname">keras_one_cycle_clr.utils.</code><code class="sig-name descname">cuda_release_memory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.utils.cuda_release_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force cuda to release GPU memory by closing it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return cuda</dt>
+<dd class="field-odd"><p>numba’s cuda module.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="keras_one_cycle_clr.utils.moving_window_avg">
+<code class="sig-prename descclassname">keras_one_cycle_clr.utils.</code><code class="sig-name descname">moving_window_avg</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">window=5</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.utils.moving_window_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a moving-window average.
+:param x: a numpy array
+:param window: an integer, number of data points for window size.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="keras_one_cycle_clr.utils.plot_from_history">
+<code class="sig-prename descclassname">keras_one_cycle_clr.utils.</code><code class="sig-name descname">plot_from_history</code><span class="sig-paren">(</span><em class="sig-param">history</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.utils.plot_from_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot losses in training history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>history</strong> – a <code class="docutils literal notranslate"><span class="pre">keras.callbacks.History</span></code> or (this module’s) <code class="docutils literal notranslate"><span class="pre">History</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="keras_one_cycle_clr.utils.reset_keras">
+<code class="sig-prename descclassname">keras_one_cycle_clr.utils.</code><code class="sig-name descname">reset_keras</code><span class="sig-paren">(</span><em class="sig-param">per_process_gpu_memory_fraction=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.utils.reset_keras" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset Keras session and set GPU configuration as well as collect unused memory.
+This is adapted from [jaycangel’s post on fastai forum](<a class="reference external" href="https://forums.fast.ai/t/how-could-i-release-gpu-memory-of-keras/2023/18">https://forums.fast.ai/t/how-could-i-release-gpu-memory-of-keras/2023/18</a>).</p>
+<p>Calling this before any training will clear Keras session. Hence, a Keras model must be redefined and compiled again.
+It can be used in during hyperparameter scan or K-fold validation when model training is invoked several times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>per_process_gpu_memory_fraction</strong> – tensorflow’s config.gpu_options.per_process_gpu_memory_fraction</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="keras_one_cycle_clr.utils.save_history_to_csv">
+<code class="sig-prename descclassname">keras_one_cycle_clr.utils.</code><code class="sig-name descname">save_history_to_csv</code><span class="sig-paren">(</span><em class="sig-param">history</em>, <em class="sig-param">filepath</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.utils.save_history_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a training history into a csv file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>history</strong> – a <code class="docutils literal notranslate"><span class="pre">History</span></code> callback instance from <code class="docutils literal notranslate"><span class="pre">Model</span></code> instance.</p></li>
+<li><p><strong>filepath</strong> – a string filepath.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="keras_one_cycle_clr.utils.set_lr">
+<code class="sig-prename descclassname">keras_one_cycle_clr.utils.</code><code class="sig-name descname">set_lr</code><span class="sig-paren">(</span><em class="sig-param">optimizer</em>, <em class="sig-param">lr</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.utils.set_lr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper to set learning rate of Keras optimizers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>optimizer</strong> – Keras optimizer</p></li>
+<li><p><strong>lr</strong> – value of learning rate.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="keras_one_cycle_clr.utils.set_momentum">
+<code class="sig-prename descclassname">keras_one_cycle_clr.utils.</code><code class="sig-name descname">set_momentum</code><span class="sig-paren">(</span><em class="sig-param">optimizer</em>, <em class="sig-param">mom_val</em><span class="sig-paren">)</span><a class="headerlink" href="#keras_one_cycle_clr.utils.set_momentum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper to set momentum of Keras optimizers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>optimizer</strong> – Keras optimizer</p></li>
+<li><p><strong>mom_val</strong> – value of momentum.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../usage_example/usage_example.html" class="btn btn-neutral float-left" title="Usage Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Pisek Kultavewuti
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

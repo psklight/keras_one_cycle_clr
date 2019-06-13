@@ -1,0 +1,477 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Usage Examples &mdash; keras_one_cycle_clr 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API" href="../api/keras_one_cycle_clr.html" />
+    <link rel="prev" title="One Cycle &amp; Cyclic Learning Rate for Keras" href="../readme.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> keras_one_cycle_clr
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">One Cycle &amp; Cyclic Learning Rate for Keras</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generating-dataset">Generating dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#define-a-model">Define a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lrrt">LrRT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#one-cycle-20-epoch">One Cycle - 20-epoch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#small-constant-learning-rate-0-005">Small constant learning rate: 0.005</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clr">CLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comparing-validation-test">Comparing validation test</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/keras_one_cycle_clr.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">keras_one_cycle_clr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Usage Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage_example/usage_example.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="usage-examples">
+<h1>Usage Examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
+<span class="kn">import</span> <span class="nn">tensorflow.keras.layers</span> <span class="k">as</span> <span class="nn">layers</span>
+<span class="kn">import</span> <span class="nn">tensorflow.keras.backend</span> <span class="k">as</span> <span class="nn">K</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;KMP_DUPLICATE_LIB_OK&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;True&#39;</span>
+<span class="n">lib_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lib_path</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">keras_one_cycle_clr</span> <span class="k">as</span> <span class="nn">ktool</span>
+</pre></div>
+</div>
+<div class="section" id="generating-dataset">
+<h2>Generating dataset<a class="headerlink" href="#generating-dataset" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1001</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">99</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">*</span><span class="mf">0.1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> \
+    <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">3.0</span><span class="o">-</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">3.0</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.33</span><span class="p">)</span>
+
+<span class="c1"># prepare a test set</span>
+<span class="n">validation_fraction</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">valid_ind</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">validation_fraction</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+
+<span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
+
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="n">valid_ind</span><span class="p">])</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="n">valid_ind</span><span class="p">])</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ind</span><span class="p">[</span><span class="n">valid_ind</span><span class="p">:])</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">ind</span><span class="p">[</span><span class="n">valid_ind</span><span class="p">:])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/output_2_0.png" src="../_images/output_2_0.png" />
+</div>
+<div class="section" id="define-a-model">
+<h2>Define a model<a class="headerlink" href="#define-a-model" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">build_model</span><span class="p">(</span><span class="n">l2_reg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="nb">input</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s2">&quot;he_normal&quot;</span><span class="p">,</span>
+                    <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">regularizers</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="n">l2_reg</span><span class="p">))(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">K</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">build_model</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WARNING</span><span class="p">:</span><span class="n">tensorflow</span><span class="p">:</span><span class="n">From</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">vikube</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">ml</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">6</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">tensorflow</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">ops</span><span class="o">/</span><span class="n">resource_variable_ops</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">435</span><span class="p">:</span> <span class="n">colocate_with</span> <span class="p">(</span><span class="kn">from</span> <span class="nn">tensorflow.python.framework.ops</span><span class="p">)</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="ow">and</span> <span class="n">will</span> <span class="n">be</span> <span class="n">removed</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">future</span> <span class="n">version</span><span class="o">.</span>
+<span class="n">Instructions</span> <span class="k">for</span> <span class="n">updating</span><span class="p">:</span>
+<span class="n">Colocations</span> <span class="n">handled</span> <span class="n">automatically</span> <span class="n">by</span> <span class="n">placer</span><span class="o">.</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reset_model</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+              <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">mean_squared_error</span><span class="p">])</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s2">&quot;demo_stage_0.hdf5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reset_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WARNING</span><span class="p">:</span><span class="n">tensorflow</span><span class="p">:</span><span class="n">From</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">vikube</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">ml</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">6</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">tensorflow</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">keras</span><span class="o">/</span><span class="n">utils</span><span class="o">/</span><span class="n">losses_utils</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">170</span><span class="p">:</span> <span class="n">to_float</span> <span class="p">(</span><span class="kn">from</span> <span class="nn">tensorflow.python.ops.math_ops</span><span class="p">)</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="ow">and</span> <span class="n">will</span> <span class="n">be</span> <span class="n">removed</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">future</span> <span class="n">version</span><span class="o">.</span>
+<span class="n">Instructions</span> <span class="k">for</span> <span class="n">updating</span><span class="p">:</span>
+<span class="n">Use</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span> <span class="n">instead</span><span class="o">.</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># model.save_weights(&quot;demo_stage_0.hdf5&quot;)</span>
+<span class="c1"># model.save(&quot;demo_stage_0.h5&quot;)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">16</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lrrt">
+<h2>LrRT<a class="headerlink" href="#lrrt" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">K</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;demo_stage_0.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lrrf_cb</span> <span class="o">=</span> <span class="n">ktool</span><span class="o">.</span><span class="n">LrRangeTest</span><span class="p">(</span><span class="n">lr_range</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+                 <span class="n">wd_list</span> <span class="o">=</span> <span class="p">[],</span>
+                 <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                 <span class="n">batches_per_step</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                 <span class="n">threshold_multiplier</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+                 <span class="n">validation_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">batches_per_val</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">n_epoch</span> <span class="o">=</span> <span class="n">lrrf_cb</span><span class="o">.</span><span class="n">find_n_epoch</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="n">n_epoch</span><span class="p">,</span>
+          <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+          <span class="n">validation_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+          <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">lrrf_cb</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lrrf_cb</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/output_13_0.png" src="../_images/output_13_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lrrf_wd_cb</span> <span class="o">=</span> <span class="n">ktool</span><span class="o">.</span><span class="n">LrRangeTest</span><span class="p">(</span><span class="n">lr_range</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+                 <span class="n">wd_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">],</span>
+                 <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                 <span class="n">batches_per_step</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                 <span class="n">threshold_multiplier</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                 <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span>
+                 <span class="n">batches_per_val</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_epoch</span> <span class="o">=</span> <span class="n">lrrf_wd_cb</span><span class="o">.</span><span class="n">find_n_epoch</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+          <span class="n">epochs</span><span class="o">=</span><span class="n">n_epoch</span><span class="p">,</span>
+          <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+          <span class="n">validation_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+          <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">lrrf_wd_cb</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lrrf_wd_cb</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s1">&#39;valid&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/output_16_0.png" src="../_images/output_16_0.png" />
+</div>
+<div class="section" id="one-cycle-20-epoch">
+<h2>One Cycle - 20-epoch<a class="headerlink" href="#one-cycle-20-epoch" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ktool</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">reset_keras</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;demo_stage_0.h5&quot;</span><span class="p">)</span>
+<span class="n">reset_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">K</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">decay</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ocp</span> <span class="o">=</span> <span class="n">ktool</span><span class="o">.</span><span class="n">OneCycle</span><span class="p">(</span><span class="n">lr_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-2</span><span class="o">/</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span>
+                    <span class="n">momentum_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">),</span>
+                    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">ocp_hist</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+                     <span class="n">epochs</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+                     <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span>
+                     <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                     <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">ocp</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ktool</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">plot_from_history</span><span class="p">(</span><span class="n">ocp_hist</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/output_21_0.png" src="../_images/output_21_0.png" />
+</div>
+<div class="section" id="small-constant-learning-rate-0-005">
+<h2>Small constant learning rate: 0.005<a class="headerlink" href="#small-constant-learning-rate-0-005" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">K</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;demo_stage_0.h5&quot;</span><span class="p">)</span>
+<span class="n">reset_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">K</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">momentum</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">)</span>
+<span class="n">K</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">const_lr_hist</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+                         <span class="n">epochs</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+                         <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span>
+                         <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">const_lr_hist</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">history</span>
+<span class="n">ktool</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">plot_from_history</span><span class="p">(</span><span class="n">const_lr_hist</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/output_26_0.png" src="../_images/output_26_0.png" />
+</div>
+<div class="section" id="clr">
+<h2>CLR<a class="headerlink" href="#clr" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">K</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;demo_stage_0.h5&quot;</span><span class="p">)</span>
+<span class="n">reset_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clr_cb</span> <span class="o">=</span> <span class="n">ktool</span><span class="o">.</span><span class="n">CLR</span><span class="p">(</span><span class="n">cyc</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                   <span class="n">lr_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-2</span><span class="o">/</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span>
+                   <span class="n">momentum_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">),</span>
+                   <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="n">amplitude_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clr_hist</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+                     <span class="n">epochs</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+                     <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span>
+                     <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                     <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">clr_cb</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ktool</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">plot_from_history</span><span class="p">(</span><span class="n">clr_hist</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/output_31_0.png" src="../_images/output_31_0.png" />
+</div>
+<div class="section" id="comparing-validation-test">
+<h2>Comparing validation test<a class="headerlink" href="#comparing-validation-test" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hists</span> <span class="o">=</span> <span class="p">[</span><span class="n">ocp_hist</span><span class="p">,</span> <span class="n">clr_hist</span><span class="p">,</span> <span class="n">const_lr_hist</span><span class="p">]</span>
+<span class="n">legends</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ocp&#39;</span><span class="p">,</span> <span class="s1">&#39;clr&#39;</span><span class="p">,</span> <span class="s1">&#39;const&#39;</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">hist</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">hists</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hist</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span> <span class="n">hist</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;val_loss&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">legends</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;epoch&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;val_loss&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/output_33_0.png" src="../_images/output_33_0.png" />
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../api/keras_one_cycle_clr.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../readme.html" class="btn btn-neutral float-left" title="One Cycle &amp; Cyclic Learning Rate for Keras" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Pisek Kultavewuti
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

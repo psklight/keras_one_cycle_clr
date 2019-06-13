@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>One Cycle &amp; Cyclic Learning Rate for Keras &mdash; keras_one_cycle_clr 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> keras_one_cycle_clr
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage_example/usage_example.html">Usage Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/keras_one_cycle_clr.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">keras_one_cycle_clr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>One Cycle &amp; Cyclic Learning Rate for Keras</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/readme.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="one-cycle-cyclic-learning-rate-for-keras">
+<h1>One Cycle &amp; Cyclic Learning Rate for Keras<a class="headerlink" href="#one-cycle-cyclic-learning-rate-for-keras" title="Permalink to this headline">¶</a></h1>
+<p>This module provides Keras callbacks to implement in training the
+following: - <a class="reference external" href="https://arxiv.org/abs/1803.09820">One cycle policy
+(OCP)</a> - <a class="reference external" href="https://arxiv.org/abs/1506.01186">Cyclic learning rate
+(CLR)</a> - Learning rate range test
+(LrRT)</p>
+<div class="section" id="highlights">
+<h2>Highlights<a class="headerlink" href="#highlights" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Learning rate &amp; Weight decay range test.</p></li>
+<li><p>Using callbacks, the module works for datasets of numpy arrays or
+data generator.</p></li>
+<li><p>Common usage as callbacks for both <code class="docutils literal notranslate"><span class="pre">model.fit</span></code> and
+<code class="docutils literal notranslate"><span class="pre">model.fit_generator</span></code> where <code class="docutils literal notranslate"><span class="pre">epochs</span></code> is intuitively interpreted
+as cycle lengths.</p></li>
+</ul>
+<div class="section" id="in-detail">
+<h3>In detail…<a class="headerlink" href="#in-detail" title="Permalink to this headline">¶</a></h3>
+<p>This is inspired by how well fastai library implements this for PyTorch.
+By the time this module was made, a few options to implement these
+learning policies in Keras have two limitations: (1) They might not work
+with data generator; (2) They might need a different way to train
+(rather than passing a policy as a callback). This module addresses both
+limitation by defining these training policies as Keras callbacks in
+such a way that both <code class="docutils literal notranslate"><span class="pre">model.fit</span></code> and <code class="docutils literal notranslate"><span class="pre">model.fit_generator</span></code> can be
+called. For OPC, the number of <code class="docutils literal notranslate"><span class="pre">epochs</span></code> (argument for fitting)
+directly represents a cycle length. For LrRT and CLR, <code class="docutils literal notranslate"><span class="pre">epochs</span></code>
+necessary to complete a training with a particular policy can be
+calculated from the policy callback’s <code class="docutils literal notranslate"><span class="pre">.find_n_epoch</span></code>.</p>
+<p>Additionally, the <code class="docutils literal notranslate"><span class="pre">utils</span></code> submodule defines some useful functions such
+as: - <code class="docutils literal notranslate"><span class="pre">plot_from_history</span></code> plots train and validation loss (if any) as
+a function of epochs. - <code class="docutils literal notranslate"><span class="pre">concatenate_history</span></code> concatenates training
+and validation losses and metrics from a list of
+<code class="docutils literal notranslate"><span class="pre">keras.callbacks.History</span></code> which can be obtained from <code class="docutils literal notranslate"><span class="pre">model.history</span></code>
+after training. This is helpful in connecting histories from multiple
+one-cycle policy trainings.</p>
+</div>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tensorflow</span></code></p></li>
+<li><p>(optional) <code class="docutils literal notranslate"><span class="pre">keras</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">pandas</span></code>, <code class="docutils literal notranslate"><span class="pre">tqdm</span></code></p></li>
+<li><p>(optional) <code class="docutils literal notranslate"><span class="pre">numba</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="example-of-lrrt">
+<h2>Example of LrRT<a class="headerlink" href="#example-of-lrrt" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lrrt_cb</span> <span class="o">=</span> <span class="n">clr</span><span class="o">.</span><span class="n">LrRangeTest</span><span class="p">(</span><span class="n">lr_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                          <span class="n">wd_list</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">],</span> <span class="c1"># grid test for weight decay</span>
+                          <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">,</span>
+                          <span class="n">batches_per_step</span><span class="o">=</span><span class="n">b</span><span class="p">,</span>
+                          <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span> <span class="c1"># good to find weight decay</span>
+                          <span class="n">batches_per_val</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                          <span class="n">threshold_multiplier</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
+                          <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">n_epoch</span> <span class="o">=</span> <span class="n">lrrt_cb</span><span class="o">.</span><span class="n">find_n_epoch</span><span class="p">(</span><span class="n">train_gen</span><span class="p">)</span>
+<span class="c1"># n_epoch = lrrt_cb.find_n_epoch(x_train, batch_size) # for numpy array as train set</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">fit_generator</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">train_gen</span><span class="p">,</span>
+                       <span class="n">epochs</span><span class="o">=</span><span class="n">n_epoch</span><span class="p">,</span>
+                       <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                       <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">lrrt_cb</span><span class="p">])</span>
+
+<span class="n">lrrt_cb</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/lrrt_wd.png" src="_images/lrrt_wd.png" />
+</div>
+<div class="section" id="example-of-ocp">
+<h2>Example of OCP<a class="headerlink" href="#example-of-ocp" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ocp_1_cb</span> <span class="o">=</span> <span class="n">clr</span><span class="o">.</span><span class="n">OneCycle</span><span class="p">(</span><span class="n">lr_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>
+                     <span class="n">momentum_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">),</span>
+                     <span class="n">reset_on_train_begin</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                     <span class="n">record_frq</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">ocp_cb</span><span class="o">.</span><span class="n">test_run</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>  <span class="c1"># plot out values of learning rate and momentum as a function of iteration (batch). 1000 is just for plotting. The actual iteration will be computed when model.fit or model.fit_generator is run.</span>
+</pre></div>
+</div>
+<img alt="_images/ocp_test_run.png" src="_images/ocp_test_run.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># setting ``epochs`` to 20 means a cycle length is 20 epochs.</span>
+<span class="n">hist1</span> <span class="o">=</span> <span class="n">model_kr</span><span class="o">.</span><span class="n">fit_generator</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">train_gen</span><span class="p">,</span>
+                      <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                      <span class="n">validation_data</span><span class="o">=</span><span class="n">val_gen</span><span class="p">,</span>
+                      <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">ocp_1_cb</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">,</span> <span class="n">tensorboard_cb</span><span class="p">],</span>
+                      <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># train for another cycle</span>
+<span class="n">ocp_2_cb</span> <span class="o">=</span> <span class="n">clr</span><span class="o">.</span><span class="n">OneCycle</span><span class="p">(</span><span class="n">lr_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span>
+                     <span class="n">momentum_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">),</span>
+                     <span class="n">reset_on_train_begin</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                     <span class="n">record_frq</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">hist2</span> <span class="o">=</span> <span class="n">model_kr</span><span class="o">.</span><span class="n">fit_generator</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">train_gen</span><span class="p">,</span>
+                      <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                      <span class="n">validation_data</span><span class="o">=</span><span class="n">val_gen</span><span class="p">,</span>
+                      <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">ocp_2_cb</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">,</span> <span class="n">tensorboard_cb</span><span class="p">],</span>
+                      <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">hist_all</span> <span class="o">=</span> <span class="n">concatenate_history</span><span class="p">([</span><span class="n">hist1</span><span class="p">,</span> <span class="n">hist2</span><span class="p">],</span> <span class="n">reindex_epoch</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">plot_from_history</span><span class="p">(</span><span class="n">hist_all</span><span class="p">)</span> <span class="c1"># plot train and validation losses versus epochs</span>
+</pre></div>
+</div>
+<img alt="_images/loss_curve_with_data_augmentation.png" src="_images/loss_curve_with_data_augmentation.png" />
+</div>
+<div class="section" id="example-of-clr">
+<h2>Example of CLR<a class="headerlink" href="#example-of-clr" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clr_cb</span> <span class="o">=</span> <span class="n">ktool</span><span class="o">.</span><span class="n">CLR</span><span class="p">(</span><span class="n">cyc</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                   <span class="n">lr_range</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-2</span><span class="o">/</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span>
+                   <span class="n">momentum_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">),</span>
+                   <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                   <span class="n">amplitude_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+
+<span class="n">clr_cb</span><span class="o">.</span><span class="n">test_run</span><span class="p">(</span><span class="mi">600</span><span class="p">)</span> <span class="c1"># see that a new cycle starts at 0th, 200th, and 400th iteration.</span>
+</pre></div>
+</div>
+<img alt="_images/clr_test_run.png" src="_images/clr_test_run.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clr_hist</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+                     <span class="n">epochs</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+                     <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span>
+                     <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                     <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">clr_cb</span><span class="p">])</span>
+
+<span class="n">plot_from_history</span><span class="p">(</span><span class="n">clr_hist</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/clr_hist.png" src="_images/clr_hist.png" />
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Pisek Kultavewuti
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
