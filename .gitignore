@@ -7,5 +7,4 @@ notebooks
 sphinx/build
 sphinx/Makefile
 sphinx/make.bat
-docs
 
