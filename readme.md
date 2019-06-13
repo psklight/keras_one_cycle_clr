@@ -6,6 +6,8 @@ This module provides Keras callbacks to implement in training the following:
 - [Cyclic learning rate (CLR)](https://arxiv.org/abs/1506.01186)
 - Learning rate range test (LrRT)
 
+(Documentation at https://psklight.github.io/keras_one_cycle_clr/)
+
 ## Highlights
 - Learning rate & Weight decay range test.
 - Using callbacks, the module works for datasets of numpy arrays or data generator.
